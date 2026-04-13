@@ -13,6 +13,7 @@
 <script src="psico_mapper.js"></script>
 <script src="psico_archtypes.js"></script>
 <script src="psico_relatorio.js"></script>
+<script src="psico_output.js"></script>
 <script src="psico_memoria.js"></script>
 <script src="psico_registro.js"></script>
 
@@ -223,7 +224,7 @@ Programa principal da leitura psicoestrutural com escala interna 0–100.000 e s
 </div>
 
 <div class="card">
-<h2>Memória, Registro e Relatório</h2>
+<h2>Memória, Registro, Relatório e Output</h2>
 
 <button onclick="salvarMemoriaPsico()">Salvar memória</button>
 <button onclick="carregarMemoriaPsico()">Carregar memória</button>
@@ -241,6 +242,13 @@ Programa principal da leitura psicoestrutural com escala interna 0–100.000 e s
 
 <button onclick="gerarRelatorioPsico()">Gerar relatório único</button>
 <button onclick="verRelatorioPsico()">Ver relatório</button>
+
+<br>
+
+<button onclick="verOutputPublico()">Ver saída pública</button>
+<button onclick="verOutputInterno()">Ver saída interna</button>
+<button onclick="verOutputCompleto()">Ver saída completa</button>
+<button onclick="verNiveisOutput()">Ver níveis de liberação</button>
 </div>
 
 </div>
@@ -500,6 +508,54 @@ return
 }
 const relatorio = PsicoRelatorio.exportarTextoCompleto()
 atualizarSaidaTecnica(relatorio)
+}
+
+function verOutputPublico(){
+if(typeof PsicoOutput === "undefined"){
+atualizarSaidaTecnica("PsicoOutput não carregado.")
+return
+}
+const saida = PsicoOutput.gerarSaidaCompleta()
+if(typeof saida === "string"){
+atualizarSaidaTecnica(saida)
+return
+}
+atualizarSaidaTecnica(JSON.stringify(saida.publico, null, 2))
+}
+
+function verOutputInterno(){
+if(typeof PsicoOutput === "undefined"){
+atualizarSaidaTecnica("PsicoOutput não carregado.")
+return
+}
+const saida = PsicoOutput.gerarSaidaCompleta()
+if(typeof saida === "string"){
+atualizarSaidaTecnica(saida)
+return
+}
+atualizarSaidaTecnica(JSON.stringify(saida.interno, null, 2))
+}
+
+function verOutputCompleto(){
+if(typeof PsicoOutput === "undefined"){
+atualizarSaidaTecnica("PsicoOutput não carregado.")
+return
+}
+const saida = PsicoOutput.gerarSaidaCompleta()
+atualizarSaidaTecnica(typeof saida === "string" ? saida : JSON.stringify(saida, null, 2))
+}
+
+function verNiveisOutput(){
+if(typeof PsicoOutput === "undefined"){
+atualizarSaidaTecnica("PsicoOutput não carregado.")
+return
+}
+const saida = PsicoOutput.gerarSaidaCompleta()
+if(typeof saida === "string"){
+atualizarSaidaTecnica(saida)
+return
+}
+atualizarSaidaTecnica(JSON.stringify(saida.niveis, null, 2))
 }
 
 function preencherExemplo(){
