@@ -10,6 +10,11 @@
 <script src="psico_avaliacao_global.js"></script>
 <script src="psico_classificador_100k.js"></script>
 <script src="psico_engine.js"></script>
+<script src="psico_mapper.js"></script>
+<script src="psico_archtypes.js"></script>
+<script src="psico_relatorio.js"></script>
+<script src="psico_memoria.js"></script>
+<script src="psico_registro.js"></script>
 
 <style>
 body{
@@ -142,7 +147,7 @@ padding-bottom:20px;
 <header>
 Lapidar PsicoEstudo
 <div class="subtitulo">
-Programa principal da leitura psicoestrutural com classificação interna 0–100.000 e saída pública 0–10
+Programa principal da leitura psicoestrutural com escala interna 0–100.000 e saída pública 0–10
 </div>
 </header>
 
@@ -171,8 +176,11 @@ Programa principal da leitura psicoestrutural com classificação interna 0–10
 
 <button onclick="carregarObraNoCore()">Carregar obra no núcleo</button>
 <button onclick="executarPsicoEstudo()">Executar PsicoEstudo</button>
+<button onclick="executarMapeamento()">Executar mapeamento narrativo</button>
+<button onclick="executarArquétipos()">Executar leitura arquetípica</button>
 <button onclick="verEstadoAtual()">Ver estado atual</button>
 <button onclick="resetarPsicoCore()">Resetar núcleo</button>
+<button onclick="preencherExemplo()">Preencher exemplo</button>
 </div>
 
 <div class="card">
@@ -199,16 +207,47 @@ Programa principal da leitura psicoestrutural com classificação interna 0–10
 </div>
 
 <div class="bloco">
+<strong>Mapeamento Narrativo</strong>
+<div id="saidaMapperPublica">Aguardando análise.</div>
+</div>
+
+<div class="bloco">
+<strong>Leitura Arquetípica</strong>
+<div id="saidaArquetiposPublica">Aguardando análise.</div>
+</div>
+
+<div class="bloco">
 <strong>Saída Técnica Completa</strong>
 <div id="saidaTecnica" class="resultado">Nenhuma leitura executada ainda.</div>
 </div>
+</div>
+
+<div class="card">
+<h2>Memória, Registro e Relatório</h2>
+
+<button onclick="salvarMemoriaPsico()">Salvar memória</button>
+<button onclick="carregarMemoriaPsico()">Carregar memória</button>
+<button onclick="verMemoriaPsico()">Ver memória</button>
+<button onclick="limparMemoriaPsico()">Limpar memória</button>
+
+<br>
+
+<button onclick="verRegistroPsico()">Ver registro</button>
+<button onclick="verUltimoRegistroPsico()">Ver última execução</button>
+<button onclick="exportarRegistroPsico()">Exportar registro</button>
+<button onclick="limparRegistroPsico()">Limpar registro</button>
+
+<br>
+
+<button onclick="gerarRelatorioPsico()">Gerar relatório único</button>
+<button onclick="verRelatorioPsico()">Ver relatório</button>
 </div>
 
 </div>
 
 <footer>
 Sistema Lapidar — PsicoEstudo<br>
-Ferramenta independente com homologação futura pelo Lapidar Pensante
+Ferramenta independente com validação futura pelo Lapidar Pensante
 </footer>
 
 <script>
@@ -232,6 +271,11 @@ textoBase: texto
 }
 
 const resposta = PsicoCore.carregarObra(pacote)
+
+if(typeof PsicoRegistro !== "undefined"){
+PsicoRegistro.registrarCargaObra()
+}
+
 atualizarSaidaTecnica(resposta)
 }
 
@@ -252,11 +296,77 @@ genero: document.getElementById("generoObra").value.trim() || "nao_identificado"
 textoBase: texto
 }
 PsicoCore.carregarObra(pacote)
+
+if(typeof PsicoRegistro !== "undefined"){
+PsicoRegistro.registrarCargaObra()
+}
 }
 
 const resposta = PsicoEngine.executarLeituraBase()
+
+if(typeof PsicoRegistro !== "undefined"){
+PsicoRegistro.registrarAvaliacaoInterna()
+PsicoRegistro.registrarAvaliacaoGlobal()
+PsicoRegistro.registrarClassificacao()
+PsicoRegistro.registrarRelatorio()
+}
+
 atualizarSaidas()
 atualizarSaidaTecnica(resposta)
+}
+
+function executarMapeamento(){
+
+const texto = document.getElementById("textoEntrada").value.trim()
+
+if(!texto){
+atualizarSaidaTecnica("Texto insuficiente para mapeamento.")
+return
+}
+
+if(typeof PsicoMapper === "undefined"){
+atualizarSaidaTecnica("PsicoMapper não carregado.")
+return
+}
+
+const resultado = PsicoMapper.executar(texto)
+
+if(!resultado){
+atualizarSaidaTecnica("Falha no mapeamento narrativo.")
+return
+}
+
+document.getElementById("saidaMapperPublica").innerText =
+resultado.observacaoMapa || "Sem observação de mapa."
+
+atualizarSaidaTecnica(JSON.stringify(resultado, null, 2))
+}
+
+function executarArquétipos(){
+
+const texto = document.getElementById("textoEntrada").value.trim()
+
+if(!texto){
+atualizarSaidaTecnica("Texto insuficiente para leitura arquetípica.")
+return
+}
+
+if(typeof PsicoArchtypes === "undefined"){
+atualizarSaidaTecnica("PsicoArchtypes não carregado.")
+return
+}
+
+const resultado = PsicoArchtypes.executar(texto)
+
+if(!resultado){
+atualizarSaidaTecnica("Falha na leitura arquetípica.")
+return
+}
+
+document.getElementById("saidaArquetiposPublica").innerText =
+resultado.observacaoArquetipica || "Sem observação arquetípica."
+
+atualizarSaidaTecnica(JSON.stringify(resultado, null, 2))
 }
 
 function atualizarSaidas(){
@@ -301,8 +411,104 @@ document.getElementById("saidaBasePublica").innerText = "Aguardando análise."
 document.getElementById("saidaInternaPublica").innerText = "Aguardando análise."
 document.getElementById("saidaGlobalPublica").innerText = "Aguardando análise."
 document.getElementById("saidaNotaPublica").innerText = "Aguardando análise."
+document.getElementById("saidaMapperPublica").innerText = "Aguardando análise."
+document.getElementById("saidaArquetiposPublica").innerText = "Aguardando análise."
 
 atualizarSaidaTecnica(resposta)
+}
+
+function salvarMemoriaPsico(){
+if(typeof PsicoMemoria === "undefined"){
+atualizarSaidaTecnica("PsicoMemoria não carregada.")
+return
+}
+atualizarSaidaTecnica(PsicoMemoria.salvarMemoria())
+}
+
+function carregarMemoriaPsico(){
+if(typeof PsicoMemoria === "undefined"){
+atualizarSaidaTecnica("PsicoMemoria não carregada.")
+return
+}
+const resposta = PsicoMemoria.carregarMemoria()
+atualizarSaidas()
+atualizarSaidaTecnica(resposta)
+}
+
+function verMemoriaPsico(){
+if(typeof PsicoMemoria === "undefined"){
+atualizarSaidaTecnica("PsicoMemoria não carregada.")
+return
+}
+atualizarSaidaTecnica(PsicoMemoria.verMemoria())
+}
+
+function limparMemoriaPsico(){
+if(typeof PsicoMemoria === "undefined"){
+atualizarSaidaTecnica("PsicoMemoria não carregada.")
+return
+}
+atualizarSaidaTecnica(PsicoMemoria.limparMemoria())
+}
+
+function verRegistroPsico(){
+if(typeof PsicoRegistro === "undefined"){
+atualizarSaidaTecnica("PsicoRegistro não carregado.")
+return
+}
+atualizarSaidaTecnica(PsicoRegistro.verHistorico())
+}
+
+function verUltimoRegistroPsico(){
+if(typeof PsicoRegistro === "undefined"){
+atualizarSaidaTecnica("PsicoRegistro não carregado.")
+return
+}
+const ultima = PsicoRegistro.ultimaExecucao()
+atualizarSaidaTecnica(typeof ultima === "string" ? ultima : JSON.stringify(ultima, null, 2))
+}
+
+function exportarRegistroPsico(){
+if(typeof PsicoRegistro === "undefined"){
+atualizarSaidaTecnica("PsicoRegistro não carregado.")
+return
+}
+atualizarSaidaTecnica(PsicoRegistro.exportarRegistro())
+}
+
+function limparRegistroPsico(){
+if(typeof PsicoRegistro === "undefined"){
+atualizarSaidaTecnica("PsicoRegistro não carregado.")
+return
+}
+atualizarSaidaTecnica(PsicoRegistro.limparRegistro())
+}
+
+function gerarRelatorioPsico(){
+if(typeof PsicoRelatorio === "undefined"){
+atualizarSaidaTecnica("PsicoRelatorio não carregado.")
+return
+}
+const relatorio = PsicoRelatorio.gerar()
+atualizarSaidaTecnica(typeof relatorio === "string" ? relatorio : JSON.stringify(relatorio, null, 2))
+}
+
+function verRelatorioPsico(){
+if(typeof PsicoRelatorio === "undefined"){
+atualizarSaidaTecnica("PsicoRelatorio não carregado.")
+return
+}
+const relatorio = PsicoRelatorio.exportarTextoCompleto()
+atualizarSaidaTecnica(relatorio)
+}
+
+function preencherExemplo(){
+document.getElementById("tituloObra").value = "A Travessia da Sombra"
+document.getElementById("autorObra").value = "Autor de Exemplo"
+document.getElementById("generoObra").value = "romance psicológico"
+document.getElementById("textoEntrada").value =
+"Prólogo\n\nEu sabia que a cidade escondia mais do que becos. Havia uma ferida nela, e essa ferida me chamava pelo nome.\n\nCapítulo 1\n\nQuando voltei à casa antiga, o silêncio parecia respirar. Cada parede devolvia uma memória. Cada passo me colocava mais perto da culpa que eu tentei esquecer.\n\nCapítulo 2\n\nEle surgiu no fim do corredor como se sempre tivesse estado ali. Não era apenas um homem. Era a sombra exata daquilo que eu temia me tornar.\n\nEpílogo\n\nNo fim, descobri que não havia fuga. Havia apenas retorno."
+atualizarSaidaTecnica("Exemplo carregado.")
 }
 
 function atualizarSaidaTecnica(texto){
