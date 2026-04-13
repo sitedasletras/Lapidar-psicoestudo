@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Lapidar PsicoEstudo</title>
 
 <style>
-
 body{
 margin:0;
 font-family:Georgia, serif;
@@ -18,31 +16,32 @@ color:#2d2d2d;
 header{
 background:#3e2f1c;
 color:white;
-padding:20px;
+padding:22px;
 text-align:center;
-font-size:28px;
-letter-spacing:1px;
+font-size:30px;
+letter-spacing:0.5px;
 }
 
 .subtitulo{
 font-size:16px;
-margin-top:5px;
-opacity:0.9;
+margin-top:6px;
+opacity:0.92;
 }
 
 .container{
-max-width:1000px;
+max-width:1050px;
 margin:auto;
 padding:40px 20px;
+box-sizing:border-box;
 }
 
 .card{
 background:white;
 border-radius:12px;
-padding:30px;
-margin-bottom:25px;
-box-shadow:0px 6px 18px rgba(0,0,0,0.08);
-transition:0.3s;
+padding:28px;
+margin-bottom:22px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+transition:0.25s;
 }
 
 .card:hover{
@@ -54,6 +53,17 @@ margin-top:0;
 color:#3e2f1c;
 }
 
+p{
+line-height:1.6;
+margin-bottom:0;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:18px;
+}
+
 button{
 background:#3e2f1c;
 color:white;
@@ -63,20 +73,26 @@ margin-top:15px;
 font-size:15px;
 border-radius:6px;
 cursor:pointer;
-transition:0.3s;
+transition:0.25s;
 }
 
 button:hover{
 background:#5b452b;
 }
 
+.lista{
+margin:12px 0 0 0;
+padding-left:18px;
+line-height:1.7;
+}
+
 footer{
 text-align:center;
 margin-top:40px;
 font-size:13px;
-opacity:0.7;
+opacity:0.75;
+padding-bottom:20px;
 }
-
 </style>
 </head>
 
@@ -85,92 +101,200 @@ opacity:0.7;
 <header>
 Lapidar PsicoEstudo
 <div class="subtitulo">
-Leitura Psicoestrutural • Arquétipos Narrativos • Mapeamento Cognitivo da Obra
+Módulo de leitura psicoestrutural, avaliação narrativa e classificação 0–100.000
 </div>
 </header>
 
 <div class="container">
 
 <div class="card">
-
-<h2>Entrada do PsicoEstudo</h2>
-
+<h2>Função da Ferramenta</h2>
 <p>
-O módulo PsicoEstudo realiza leitura interpretativa profunda da obra, identificando estruturas emocionais, arquétipos narrativos, maturidade literária e campo simbólico dominante.
+O Lapidar PsicoEstudo é a ferramenta independente do ecossistema Lapidar destinada à leitura psicoestrutural da narrativa e da obra como um todo. Seu papel é produzir uma saída única de avaliação progressiva, com base em leitura interna da história, leitura global da obra e pontuação preliminar integrada à escala de 0 a 100.000.
 </p>
-
-<button onclick="abrirPsico()">Iniciar leitura psicoestrutural</button>
-
 </div>
 
+<div class="grid">
 
 <div class="card">
-
-<h2>Mapeamento de Arquétipos</h2>
-
+<h2>Painel Principal</h2>
 <p>
-Detecta protagonista, antagonista, personagens sombra, mentores, espelhos narrativos e forças simbólicas presentes na obra.
+Entrada da obra, execução da leitura psicoestrutural e geração do relatório progressivo.
 </p>
-
-<button onclick="abrirArquétipos()">Executar análise arquetípica</button>
-
+<button onclick="abrirPainelPrincipal()">Abrir psicoestudo</button>
 </div>
-
 
 <div class="card">
-
-<h2>Mapa Cognitivo Narrativo</h2>
-
+<h2>Core Psicoestrutural</h2>
 <p>
-Constrói o mapa psicológico da narrativa com identificação de ritmo emocional, densidade simbólica e estabilidade do narrador.
+Núcleo de estado, memória e organização da avaliação interna e global da obra.
 </p>
-
-<button onclick="abrirMapa()">Gerar mapa cognitivo</button>
-
+<button onclick="abrirCore()">Abrir núcleo lógico</button>
 </div>
-
 
 <div class="card">
-
-<h2>Dashboard PsicoEstudo</h2>
-
+<h2>Engine de Avaliação</h2>
 <p>
-Visualização consolidada da leitura interpretativa aplicada à obra.
+Motor responsável por acionar os avaliadores, o classificador 0–100.000 e o relatório único.
 </p>
+<button onclick="abrirEngine()">Abrir engine</button>
+</div>
 
-<button onclick="abrirDashboard()">Abrir painel técnico</button>
+<div class="card">
+<h2>Avaliação Interna da História</h2>
+<p>
+Camada dedicada à coerência emocional, conflito, ritmo psicológico, narrador e força dramática.
+</p>
+<button onclick="abrirAvaliacaoInterna()">Abrir avaliação interna</button>
+</div>
+
+<div class="card">
+<h2>Avaliação Global da Obra</h2>
+<p>
+Camada dedicada à maturidade literária, identidade autoral, força estrutural e potencial editorial.
+</p>
+<button onclick="abrirAvaliacaoGlobal()">Abrir avaliação global</button>
+</div>
+
+<div class="card">
+<h2>Classificador 0–100.000</h2>
+<p>
+Sistema de pontuação preliminar da história e da obra, preparado para validação futura pelo Lapidar Pensante.
+</p>
+<button onclick="abrirClassificador()">Abrir classificador</button>
+</div>
+
+<div class="card">
+<h2>Mapeamento Psicoestrutural</h2>
+<p>
+Mapeamento de personagens, relações, tensões, eixos dramáticos e clima narrativo.
+</p>
+<button onclick="abrirMapper()">Abrir mapeador</button>
+</div>
+
+<div class="card">
+<h2>Arquétipos Narrativos</h2>
+<p>
+Detector de protagonista, antagonista, sombra, espelho, guia e forças simbólicas dominantes.
+</p>
+<button onclick="abrirArquetipos()">Abrir arquétipos</button>
+</div>
+
+<div class="card">
+<h2>Relatório Único Progressivo</h2>
+<p>
+Saída única da ferramenta, com conteúdo liberável por níveis conforme política de uso e pagamento.
+</p>
+<button onclick="abrirRelatorio()">Abrir relatório</button>
+</div>
+
+<div class="card">
+<h2>Memória do Módulo</h2>
+<p>
+Camada de persistência do PsicoEstudo para manter continuidade entre análises.
+</p>
+<button onclick="abrirMemoria()">Abrir memória</button>
+</div>
+
+<div class="card">
+<h2>Registro e Auditoria</h2>
+<p>
+Histórico institucional de execuções, pontuações e estados gerados pelo PsicoEstudo.
+</p>
+<button onclick="abrirRegistro()">Abrir registro</button>
+</div>
+
+<div class="card">
+<h2>Dashboard Técnico</h2>
+<p>
+Painel consolidado de leitura do estado da ferramenta e dos resultados gerados.
+</p>
+<button onclick="abrirDashboard()">Abrir dashboard</button>
+</div>
 
 </div>
 
+<div class="card">
+<h2>Espinha Dorsal Prevista</h2>
+<ul class="lista">
+<li>index.html</li>
+<li>psicoestudo.html</li>
+<li>psico_core.js</li>
+<li>psico_engine.js</li>
+<li>psico_avaliacao_interna.js</li>
+<li>psico_avaliacao_global.js</li>
+<li>psico_classificador_100k.js</li>
+<li>psico_mapper.js</li>
+<li>psico_archtypes.js</li>
+<li>psico_relatorio.js</li>
+<li>psico_memoria.js</li>
+<li>psico_registro.js</li>
+<li>dashboard_psico.html</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>Posição no Ecossistema</h2>
+<p>
+Esta ferramenta nasce separada. Ela gera análise interna, análise global e pontuação preliminar. O respaldo avaliativo final será fornecido futuramente pelo núcleo do Lapidar Pensante, em fase única posterior de integração do cérebro para as partes.
+</p>
+</div>
 
 </div>
 
 <footer>
-
-Sistema Lapidar — PsicoEstudo  
-Módulo cognitivo independente integrado ao Celeiro Literário
-
+Sistema Lapidar — PsicoEstudo<br>
+Ferramenta independente, congelável e preparada para validação simbiótica futura
 </footer>
 
-
 <script>
-
-function abrirPsico(){
+function abrirPainelPrincipal(){
 window.location.href="psicoestudo.html"
 }
 
-function abrirArquétipos(){
+function abrirCore(){
+window.location.href="psico_core.js"
+}
+
+function abrirEngine(){
+window.location.href="psico_engine.js"
+}
+
+function abrirAvaliacaoInterna(){
+window.location.href="psico_avaliacao_interna.js"
+}
+
+function abrirAvaliacaoGlobal(){
+window.location.href="psico_avaliacao_global.js"
+}
+
+function abrirClassificador(){
+window.location.href="psico_classificador_100k.js"
+}
+
+function abrirMapper(){
+window.location.href="psico_mapper.js"
+}
+
+function abrirArquetipos(){
 window.location.href="psico_archtypes.js"
 }
 
-function abrirMapa(){
-window.location.href="psico_mapper.js"
+function abrirRelatorio(){
+window.location.href="psico_relatorio.js"
+}
+
+function abrirMemoria(){
+window.location.href="psico_memoria.js"
+}
+
+function abrirRegistro(){
+window.location.href="psico_registro.js"
 }
 
 function abrirDashboard(){
 window.location.href="dashboard_psico.html"
 }
-
 </script>
 
 </body>
