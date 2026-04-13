@@ -9,6 +9,7 @@
 <script src="psico_memoria.js"></script>
 <script src="psico_registro.js"></script>
 <script src="psico_relatorio.js"></script>
+<script src="psico_output.js"></script>
 
 <style>
 body{
@@ -97,7 +98,7 @@ box-shadow:0 6px 18px rgba(0,0,0,0.08);
 white-space:pre-wrap;
 word-break:break-word;
 line-height:1.6;
-min-height:160px;
+min-height:180px;
 }
 
 .back{
@@ -127,7 +128,7 @@ padding-bottom:20px;
 <header>
 Dashboard — Lapidar PsicoEstudo
 <div class="subtitulo">
-Painel técnico de estado, memória, relatório e auditoria do módulo
+Painel técnico interno do módulo psicoestrutural
 </div>
 </header>
 
@@ -138,6 +139,11 @@ Painel técnico de estado, memória, relatório e auditoria do módulo
 <div class="card">
 <h2>Estado do Núcleo</h2>
 <div class="info" id="estadoNucleo">Carregando...</div>
+</div>
+
+<div class="card">
+<h2>Identificação da Obra</h2>
+<div class="info" id="estadoObra">Carregando...</div>
 </div>
 
 <div class="card">
@@ -152,17 +158,22 @@ Painel técnico de estado, memória, relatório e auditoria do módulo
 
 <div class="card">
 <h2>Classificação Pública</h2>
-<div class="info" id="estadoClassificacao">Carregando...</div>
+<div class="info" id="classificacaoPublica">Carregando...</div>
 </div>
 
 <div class="card">
-<h2>Identificação da Obra</h2>
-<div class="info" id="estadoObra">Carregando...</div>
+<h2>Classificação Interna</h2>
+<div class="info" id="classificacaoInterna">Carregando...</div>
 </div>
 
 <div class="card">
-<h2>Relatório Progressivo</h2>
-<div class="info" id="estadoRelatorio">Carregando...</div>
+<h2>Saída Pública</h2>
+<div class="info" id="saidaPublicaResumo">Carregando...</div>
+</div>
+
+<div class="card">
+<h2>Níveis Progressivos</h2>
+<div class="info" id="niveisOutput">Carregando...</div>
 </div>
 
 </div>
@@ -172,6 +183,10 @@ Painel técnico de estado, memória, relatório e auditoria do módulo
 
 <button onclick="atualizarDashboard()">Atualizar dashboard</button>
 <button onclick="verResumoCompleto()">Ver resumo completo</button>
+<button onclick="verOutputPublico()">Ver output público</button>
+<button onclick="verOutputInterno()">Ver output interno</button>
+<button onclick="verOutputCompleto()">Ver output completo</button>
+<button onclick="verNiveis()">Ver níveis</button>
 <button onclick="verMemoriaCompleta()">Ver memória completa</button>
 <button onclick="verRegistroCompleto()">Ver registro completo</button>
 <button onclick="verRelatorioCompleto()">Ver relatório completo</button>
@@ -187,7 +202,7 @@ Painel técnico de estado, memória, relatório e auditoria do módulo
 
 <footer>
 Sistema Lapidar — PsicoEstudo<br>
-Dashboard periférico de leitura sem violação da espinha dorsal
+Dashboard técnico periférico sem violação da espinha dorsal
 </footer>
 
 <script>
@@ -196,10 +211,14 @@ function atualizarDashboard(){
 const estadoCore = obterEstadoCore()
 const estadoMemoria = obterEstadoMemoria()
 const estadoRegistro = obterEstadoRegistro()
+const output = obterOutput()
 const relatorio = obterRelatorio()
 
 document.getElementById("estadoNucleo").innerText =
 formatarEstadoNucleo(estadoCore)
+
+document.getElementById("estadoObra").innerText =
+formatarIdentificacaoObra(estadoCore)
 
 document.getElementById("estadoMemoria").innerText =
 formatarEstadoMemoria(estadoMemoria)
@@ -207,14 +226,17 @@ formatarEstadoMemoria(estadoMemoria)
 document.getElementById("estadoRegistro").innerText =
 formatarEstadoRegistro(estadoRegistro)
 
-document.getElementById("estadoClassificacao").innerText =
-formatarClassificacao(relatorio)
+document.getElementById("classificacaoPublica").innerText =
+formatarClassificacaoPublica(output)
 
-document.getElementById("estadoObra").innerText =
-formatarIdentificacaoObra(estadoCore)
+document.getElementById("classificacaoInterna").innerText =
+formatarClassificacaoInterna(output)
 
-document.getElementById("estadoRelatorio").innerText =
-formatarEstadoRelatorio(relatorio)
+document.getElementById("saidaPublicaResumo").innerText =
+formatarSaidaPublica(output)
+
+document.getElementById("niveisOutput").innerText =
+formatarNiveis(output)
 
 document.getElementById("saidaTecnica").innerText =
 "Dashboard atualizado com sucesso."
@@ -264,6 +286,17 @@ return null
 }
 }
 
+function obterOutput(){
+try{
+if(typeof PsicoOutput === "undefined"){
+return null
+}
+return PsicoOutput.gerarSaidaCompleta()
+}catch(e){
+return null
+}
+}
+
 function formatarEstadoNucleo(estado){
 if(!estado){
 return "PsicoCore indisponível."
@@ -276,6 +309,18 @@ linhas.push("Avaliação global: " + (estado.estado.avaliacaoGlobalExecutada ? "
 linhas.push("Classificação: " + (estado.estado.classificacaoExecutada ? "sim" : "não"))
 linhas.push("Relatório: " + (estado.estado.relatorioGerado ? "sim" : "não"))
 linhas.push("Status: " + (estado.memoria.status || "indefinido"))
+return linhas.join("\n")
+}
+
+function formatarIdentificacaoObra(estado){
+if(!estado){
+return "Identificação não disponível."
+}
+
+let linhas = []
+linhas.push("Título: " + (estado.memoria.titulo || "sem_titulo"))
+linhas.push("Autor: " + (estado.memoria.autor || "sem_autor"))
+linhas.push("Gênero: " + (estado.memoria.genero || "nao_identificado"))
 return linhas.join("\n")
 }
 
@@ -299,115 +344,4 @@ return "Registro indisponível."
 }
 
 let linhas = []
-linhas.push("Quantidade de execuções: " + (registro.quantidadeExecucoes || 0))
-linhas.push("Última atualização: " + (registro.ultimaAtualizacao || "não registrada"))
-return linhas.join("\n")
-}
-
-function formatarClassificacao(relatorio){
-if(!relatorio || typeof relatorio === "string"){
-return "Classificação ainda não disponível."
-}
-
-if(!relatorio.classificacaoPublica || typeof relatorio.classificacaoPublica === "string"){
-return "Classificação pública ainda não disponível."
-}
-
-let linhas = []
-linhas.push("História: " + relatorio.classificacaoPublica.notaHistoria + " / 10")
-linhas.push("Obra: " + relatorio.classificacaoPublica.notaObra + " / 10")
-return linhas.join("\n")
-}
-
-function formatarIdentificacaoObra(estado){
-if(!estado){
-return "Identificação não disponível."
-}
-
-let linhas = []
-linhas.push("Título: " + (estado.memoria.titulo || "sem_titulo"))
-linhas.push("Autor: " + (estado.memoria.autor || "sem_autor"))
-linhas.push("Gênero: " + (estado.memoria.genero || "nao_identificado"))
-return linhas.join("\n")
-}
-
-function formatarEstadoRelatorio(relatorio){
-if(!relatorio){
-return "Relatório não disponível."
-}
-
-if(typeof relatorio === "string"){
-return relatorio
-}
-
-let linhas = []
-linhas.push("Saída base: " + (relatorio.saidaBase ? "ok" : "não"))
-linhas.push("Avaliação interna: " + (relatorio.avaliacaoInterna ? "ok" : "não"))
-linhas.push("Avaliação global: " + (relatorio.avaliacaoGlobal ? "ok" : "não"))
-linhas.push("Status: " + (relatorio.status || "indefinido"))
-return linhas.join("\n")
-}
-
-function verResumoCompleto(){
-const resumo = {
-core: obterEstadoCore(),
-memoria: obterEstadoMemoria(),
-registro: obterEstadoRegistro(),
-relatorio: obterRelatorio()
-}
-document.getElementById("saidaTecnica").innerText =
-JSON.stringify(resumo, null, 2)
-}
-
-function verMemoriaCompleta(){
-if(typeof PsicoMemoria === "undefined"){
-document.getElementById("saidaTecnica").innerText = "PsicoMemoria indisponível."
-return
-}
-document.getElementById("saidaTecnica").innerText =
-PsicoMemoria.verMemoria()
-}
-
-function verRegistroCompleto(){
-if(typeof PsicoRegistro === "undefined"){
-document.getElementById("saidaTecnica").innerText = "PsicoRegistro indisponível."
-return
-}
-document.getElementById("saidaTecnica").innerText =
-PsicoRegistro.verHistorico()
-}
-
-function verRelatorioCompleto(){
-if(typeof PsicoRelatorio === "undefined"){
-document.getElementById("saidaTecnica").innerText = "PsicoRelatorio indisponível."
-return
-}
-const relatorio = PsicoRelatorio.gerar()
-document.getElementById("saidaTecnica").innerText =
-typeof relatorio === "string" ? relatorio : JSON.stringify(relatorio, null, 2)
-}
-
-function exportarRegistro(){
-if(typeof PsicoRegistro === "undefined"){
-document.getElementById("saidaTecnica").innerText = "PsicoRegistro indisponível."
-return
-}
-document.getElementById("saidaTecnica").innerText =
-PsicoRegistro.exportarRegistro()
-}
-
-function limparRegistro(){
-if(typeof PsicoRegistro === "undefined"){
-document.getElementById("saidaTecnica").innerText = "PsicoRegistro indisponível."
-return
-}
-document.getElementById("saidaTecnica").innerText =
-PsicoRegistro.limparRegistro()
-atualizarDashboard()
-}
-
-window.onload = atualizarDashboard
-</script>
-
-</body>
-</html>
+lin
