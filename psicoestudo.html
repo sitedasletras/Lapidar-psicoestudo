@@ -3,11 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lapidar PsicoEstudo — Programa Principal</title>
 
-<title>Lapidar PsicoEstudo — Relatório Psicoestrutural</title>
+<script src="psico_core.js"></script>
+<script src="psico_avaliacao_interna.js"></script>
+<script src="psico_avaliacao_global.js"></script>
+<script src="psico_classificador_100k.js"></script>
+<script src="psico_engine.js"></script>
 
 <style>
-
 body{
 margin:0;
 font-family:Georgia, serif;
@@ -18,224 +22,293 @@ color:#2b2b2b;
 header{
 background:#3e2f1c;
 color:white;
-padding:18px;
+padding:20px;
 text-align:center;
-font-size:26px;
+font-size:28px;
+}
+
+.subtitulo{
+font-size:15px;
+margin-top:6px;
+opacity:0.92;
 }
 
 .container{
-max-width:950px;
+max-width:1000px;
 margin:auto;
-padding:30px;
+padding:30px 20px;
+box-sizing:border-box;
 }
 
 .card{
 background:white;
-padding:25px;
-border-radius:10px;
-margin-bottom:20px;
-box-shadow:0px 5px 14px rgba(0,0,0,0.08);
+padding:24px;
+border-radius:12px;
+margin-bottom:22px;
+box-shadow:0 5px 14px rgba(0,0,0,0.08);
+}
+
+h2{
+margin-top:0;
+color:#3e2f1c;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:bold;
+}
+
+input, textarea, button{
+font-family:Georgia, serif;
+font-size:15px;
+box-sizing:border-box;
+}
+
+input, textarea{
+width:100%;
+padding:12px;
+border:1px solid #cfc6b7;
+border-radius:8px;
 }
 
 textarea{
-width:100%;
-height:220px;
-padding:12px;
-font-size:15px;
-border-radius:6px;
-border:1px solid #ccc;
+min-height:260px;
 resize:vertical;
+line-height:1.6;
 }
 
 button{
-
 background:#3e2f1c;
 color:white;
 border:none;
 padding:12px 20px;
-margin-top:15px;
+margin:8px 8px 0 0;
 border-radius:6px;
 cursor:pointer;
-
 }
 
 button:hover{
 background:#5a4228;
 }
 
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+@media (max-width: 800px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
 .resultado{
-margin-top:25px;
+margin-top:20px;
 padding:18px;
 background:#faf7f0;
 border-left:6px solid #3e2f1c;
-display:none;
+border-radius:8px;
+white-space:pre-wrap;
+line-height:1.6;
+min-height:180px;
 }
 
-.nivel{
-margin-top:12px;
-padding:12px;
-background:#ece6d8;
-border-radius:6px;
+.bloco{
+margin-top:16px;
+padding:14px;
+border-radius:8px;
+background:#efe7d8;
 }
 
-.lock{
-opacity:0.5;
+.bloco strong{
+display:block;
+margin-bottom:8px;
 }
 
 footer{
 text-align:center;
 margin-top:40px;
 font-size:13px;
-opacity:0.7;
+opacity:0.75;
+padding-bottom:20px;
 }
-
 </style>
-
 </head>
 
 <body>
 
 <header>
-
-Lapidar PsicoEstudo  
-Relatório Psicoestrutural Progressivo
-
+Lapidar PsicoEstudo
+<div class="subtitulo">
+Programa principal da leitura psicoestrutural com classificação interna 0–100.000 e saída pública 0–10
+</div>
 </header>
-
 
 <div class="container">
 
-
 <div class="card">
-
 <h2>Entrada da Obra</h2>
 
-<textarea id="textoEntrada" placeholder="Cole aqui trecho da obra ou capítulo completo..."></textarea>
-
-<button onclick="executarPsicoEstudo()">
-
-Executar leitura psicoestrutural
-
-</button>
-
+<div class="grid">
+<div>
+<label for="tituloObra">Título da obra</label>
+<input type="text" id="tituloObra" placeholder="Digite o título da obra">
 </div>
 
-
-
-<div id="saidaPsico" class="resultado">
-
-<h2>Relatório PsicoEstudo</h2>
-
-<div id="nivelBase" class="nivel">
-
-<strong>Nível Base — Perfil Narrativo</strong>
-
-<p id="perfilNarrativo"></p>
-
+<div>
+<label for="autorObra">Autor</label>
+<input type="text" id="autorObra" placeholder="Digite o nome do autor">
+</div>
 </div>
 
+<label for="generoObra">Gênero</label>
+<input type="text" id="generoObra" placeholder="Ex.: romance, fantasia, poesia, conto">
 
+<label for="textoEntrada">Texto da obra</label>
+<textarea id="textoEntrada" placeholder="Cole aqui trecho da obra, capítulo ou texto completo..."></textarea>
 
-<div id="nivelIntermediario" class="nivel lock">
+<button onclick="carregarObraNoCore()">Carregar obra no núcleo</button>
+<button onclick="executarPsicoEstudo()">Executar PsicoEstudo</button>
+<button onclick="verEstadoAtual()">Ver estado atual</button>
+<button onclick="resetarPsicoCore()">Resetar núcleo</button>
+</div>
 
+<div class="card">
+<h2>Saída Única Progressiva</h2>
+
+<div class="bloco">
+<strong>Nível Base — Perfil Psicoestrutural</strong>
+<div id="saidaBasePublica">Aguardando análise.</div>
+</div>
+
+<div class="bloco">
 <strong>Nível Intermediário — Avaliação Interna da História</strong>
-
-<p>
-
-Disponível após liberação do nível intermediário.
-
-</p>
-
+<div id="saidaInternaPublica">Aguardando análise.</div>
 </div>
 
-
-
-<div id="nivelAvancado" class="nivel lock">
-
+<div class="bloco">
 <strong>Nível Avançado — Avaliação Global da Obra</strong>
-
-<p>
-
-Disponível após liberação do nível avançado.
-
-</p>
-
+<div id="saidaGlobalPublica">Aguardando análise.</div>
 </div>
 
-
-
-<div id="nivelSimbiose" class="nivel lock">
-
-<strong>Nível Simbiótico — Validação pelo Lapidar Pensante</strong>
-
-<p>
-
-Disponível após validação simbiótica do núcleo cognitivo.
-
-</p>
-
+<div class="bloco">
+<strong>Nível Classificatório — Nota Pública</strong>
+<div id="saidaNotaPublica">Aguardando análise.</div>
 </div>
 
-
+<div class="bloco">
+<strong>Saída Técnica Completa</strong>
+<div id="saidaTecnica" class="resultado">Nenhuma leitura executada ainda.</div>
+</div>
 </div>
 
-
 </div>
-
 
 <footer>
-
-Sistema Lapidar — PsicoEstudo  
-Motor psicoestrutural com classificação 0–100.000
-
+Sistema Lapidar — PsicoEstudo<br>
+Ferramenta independente com homologação futura pelo Lapidar Pensante
 </footer>
 
-
-
 <script>
+function carregarObraNoCore(){
+
+const titulo = document.getElementById("tituloObra").value.trim()
+const autor = document.getElementById("autorObra").value.trim()
+const genero = document.getElementById("generoObra").value.trim()
+const texto = document.getElementById("textoEntrada").value.trim()
+
+if(!texto){
+atualizarSaidaTecnica("Texto insuficiente para carregar no PsicoCore.")
+return
+}
+
+const pacote = {
+titulo: titulo || "sem_titulo",
+autor: autor || "sem_autor",
+genero: genero || "nao_identificado",
+textoBase: texto
+}
+
+const resposta = PsicoCore.carregarObra(pacote)
+atualizarSaidaTecnica(resposta)
+}
 
 function executarPsicoEstudo(){
 
-const texto=document.getElementById("textoEntrada").value;
+const texto = document.getElementById("textoEntrada").value.trim()
 
-if(texto.length<20){
-
-alert("Texto insuficiente para análise.");
-
-return;
-
+if(!texto || texto.length < 20){
+atualizarSaidaTecnica("Texto insuficiente para análise.")
+return
 }
 
-let perfil="";
+if(!PsicoCore.estado.obraCarregada){
+const pacote = {
+titulo: document.getElementById("tituloObra").value.trim() || "sem_titulo",
+autor: document.getElementById("autorObra").value.trim() || "sem_autor",
+genero: document.getElementById("generoObra").value.trim() || "nao_identificado",
+textoBase: texto
+}
+PsicoCore.carregarObra(pacote)
+}
 
-if(texto.includes("eu ")){
+const resposta = PsicoEngine.executarLeituraBase()
+atualizarSaidas()
+atualizarSaidaTecnica(resposta)
+}
 
-perfil="Narrador em primeira pessoa detectado. Forte tendência introspectiva.";
+function atualizarSaidas(){
 
+const memoria = PsicoCore.memoria
+
+document.getElementById("saidaBasePublica").innerText =
+memoria.saidaBase || "Sem saída base."
+
+if(memoria.avaliacaoInterna){
+document.getElementById("saidaInternaPublica").innerText =
+memoria.avaliacaoInterna.observacaoInterna || "Sem avaliação interna."
 }else{
-
-perfil="Narrador externo predominante detectado.";
-
+document.getElementById("saidaInternaPublica").innerText = "Sem avaliação interna."
 }
 
-if(texto.length>1500){
-
-perfil+=" Estrutura narrativa consistente.";
-
+if(memoria.avaliacaoGlobal){
+document.getElementById("saidaGlobalPublica").innerText =
+memoria.avaliacaoGlobal.observacaoGlobal || "Sem avaliação global."
 }else{
-
-perfil+=" Estrutura narrativa em formação.";
-
+document.getElementById("saidaGlobalPublica").innerText = "Sem avaliação global."
 }
 
-document.getElementById("perfilNarrativo").innerText=perfil;
-
-document.getElementById("saidaPsico").style.display="block";
-
+if(memoria.classificacaoPreliminar){
+document.getElementById("saidaNotaPublica").innerText =
+"História: " + memoria.classificacaoPreliminar.notaInternaHistoria_10 + " / 10\n" +
+"Obra: " + memoria.classificacaoPreliminar.notaGlobalObra_10 + " / 10"
+}else{
+document.getElementById("saidaNotaPublica").innerText = "Sem classificação pública."
+}
 }
 
+function verEstadoAtual(){
+const estado = PsicoCore.status()
+atualizarSaidaTecnica(JSON.stringify(estado, null, 2))
+}
+
+function resetarPsicoCore(){
+const resposta = PsicoCore.resetar()
+
+document.getElementById("saidaBasePublica").innerText = "Aguardando análise."
+document.getElementById("saidaInternaPublica").innerText = "Aguardando análise."
+document.getElementById("saidaGlobalPublica").innerText = "Aguardando análise."
+document.getElementById("saidaNotaPublica").innerText = "Aguardando análise."
+
+atualizarSaidaTecnica(resposta)
+}
+
+function atualizarSaidaTecnica(texto){
+document.getElementById("saidaTecnica").innerText = texto
+}
 </script>
-
 
 </body>
 </html>
