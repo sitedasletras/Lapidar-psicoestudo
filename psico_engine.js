@@ -7,7 +7,7 @@ Responsável por:
 – receber a obra carregada no PsicoCore
 – executar a avaliação interna da história
 – executar a avaliação global da obra
-– executar a classificação preliminar 0–100.000
+– acionar o classificador 0–100.000
 – gerar a saída base
 – montar o relatório progressivo
 – coordenar o fluxo oficial do PsicoEstudo
@@ -139,25 +139,14 @@ if(!interna || !global){
 return "Classificação preliminar não pôde ser executada"
 }
 
-if(
-typeof PsicoAvaliacaoInterna === "undefined" ||
-typeof PsicoAvaliacaoGlobal === "undefined"
-){
-return "Módulos avaliativos não carregados"
+if(typeof PsicoClassificador100K === "undefined"){
+return "PsicoClassificador100K não carregado"
 }
 
-const pontosInternos = PsicoAvaliacaoInterna.pontuar(interna)
-const pontosGlobais = PsicoAvaliacaoGlobal.pontuar(global)
+const classificacao = PsicoClassificador100K.executar(interna, global)
 
-let notaInterna = Math.min(pontosInternos * 4000, 100000)
-let notaGlobal = Math.min(pontosGlobais * 4000, 100000)
-
-let classificacao = {
-notaInternaHistoria:notaInterna,
-notaGlobalObra:notaGlobal,
-faixaInterna:this.classificarFaixa100k(notaInterna),
-faixaGlobal:this.classificarFaixa100k(notaGlobal),
-status:"pontuacao_preliminar"
+if(!classificacao){
+return "Falha ao gerar classificação preliminar"
 }
 
 PsicoCore.registrarClassificacaoPreliminar(classificacao)
@@ -189,21 +178,39 @@ return "Relatório progressivo gerado com sucesso"
 
 
 
-classificarFaixa100k(nota){
+executarSomenteSaidaBase(){
 
-if(nota >= 90000){
-return "obra_estruturante"
+const texto = PsicoCore.obterTextoBase()
+
+if(!texto || texto.trim() === ""){
+return "Nenhum texto disponível para saída base"
 }
 
-if(nota >= 70000){
-return "obra_relevante"
-}
+return this.gerarSaidaBase(texto)
 
-if(nota >= 40000){
-return "obra_solida"
-}
+},
 
-return "obra_em_formacao"
+
+
+executarSomenteAvaliacaoInterna(){
+
+return this.executarAvaliacaoInterna()
+
+},
+
+
+
+executarSomenteAvaliacaoGlobal(){
+
+return this.executarAvaliacaoGlobal()
+
+},
+
+
+
+executarSomenteClassificacao(){
+
+return this.executarClassificacaoPreliminar()
 
 },
 
