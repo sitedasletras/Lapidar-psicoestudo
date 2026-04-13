@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lapidar PsicoEstudo — Relatório Psicoestrutural</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Georgia, serif;
+background:linear-gradient(135deg,#f6f2e9,#e3dac8);
+color:#2b2b2b;
+}
+
+header{
+background:#3e2f1c;
+color:white;
+padding:18px;
+text-align:center;
+font-size:26px;
+}
+
+.container{
+max-width:950px;
+margin:auto;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0px 5px 14px rgba(0,0,0,0.08);
+}
+
+textarea{
+width:100%;
+height:220px;
+padding:12px;
+font-size:15px;
+border-radius:6px;
+border:1px solid #ccc;
+resize:vertical;
+}
+
+button{
+
+background:#3e2f1c;
+color:white;
+border:none;
+padding:12px 20px;
+margin-top:15px;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+button:hover{
+background:#5a4228;
+}
+
+.resultado{
+margin-top:25px;
+padding:18px;
+background:#faf7f0;
+border-left:6px solid #3e2f1c;
+display:none;
+}
+
+.nivel{
+margin-top:12px;
+padding:12px;
+background:#ece6d8;
+border-radius:6px;
+}
+
+.lock{
+opacity:0.5;
+}
+
+footer{
+text-align:center;
+margin-top:40px;
+font-size:13px;
+opacity:0.7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+Lapidar PsicoEstudo  
+Relatório Psicoestrutural Progressivo
+
+</header>
+
+
+<div class="container">
+
+
+<div class="card">
+
+<h2>Entrada da Obra</h2>
+
+<textarea id="textoEntrada" placeholder="Cole aqui trecho da obra ou capítulo completo..."></textarea>
+
+<button onclick="executarPsicoEstudo()">
+
+Executar leitura psicoestrutural
+
+</button>
+
+</div>
+
+
+
+<div id="saidaPsico" class="resultado">
+
+<h2>Relatório PsicoEstudo</h2>
+
+<div id="nivelBase" class="nivel">
+
+<strong>Nível Base — Perfil Narrativo</strong>
+
+<p id="perfilNarrativo"></p>
+
+</div>
+
+
+
+<div id="nivelIntermediario" class="nivel lock">
+
+<strong>Nível Intermediário — Avaliação Interna da História</strong>
+
+<p>
+
+Disponível após liberação do nível intermediário.
+
+</p>
+
+</div>
+
+
+
+<div id="nivelAvancado" class="nivel lock">
+
+<strong>Nível Avançado — Avaliação Global da Obra</strong>
+
+<p>
+
+Disponível após liberação do nível avançado.
+
+</p>
+
+</div>
+
+
+
+<div id="nivelSimbiose" class="nivel lock">
+
+<strong>Nível Simbiótico — Validação pelo Lapidar Pensante</strong>
+
+<p>
+
+Disponível após validação simbiótica do núcleo cognitivo.
+
+</p>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<footer>
+
+Sistema Lapidar — PsicoEstudo  
+Motor psicoestrutural com classificação 0–100.000
+
+</footer>
+
+
+
+<script>
+
+function executarPsicoEstudo(){
+
+const texto=document.getElementById("textoEntrada").value;
+
+if(texto.length<20){
+
+alert("Texto insuficiente para análise.");
+
+return;
+
+}
+
+let perfil="";
+
+if(texto.includes("eu ")){
+
+perfil="Narrador em primeira pessoa detectado. Forte tendência introspectiva.";
+
+}else{
+
+perfil="Narrador externo predominante detectado.";
+
+}
+
+if(texto.length>1500){
+
+perfil+=" Estrutura narrativa consistente.";
+
+}else{
+
+perfil+=" Estrutura narrativa em formação.";
+
+}
+
+document.getElementById("perfilNarrativo").innerText=perfil;
+
+document.getElementById("saidaPsico").style.display="block";
+
+}
+
+</script>
+
+
+</body>
+</html>
